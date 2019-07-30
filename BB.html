@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+      text-align: center;
+      font-family: fantasy;
+    }
+    #game {
+            width: 1300px;
+            height: 908px;
+            cursor: url(./img/cursor2.png) 50 50, auto;
+            overflow: hidden;
+            position: relative;
+            background-image: url(./img/BB.jpg);
+            margin: 50px 300px;
+            box-shadow: 5px 5px 10px 5px #a3a3a3;
+        }
+        .zb{
+            height: 150px;
+            position: absolute;
+        }
+        #start{
+            font-size: 20px;
+        }
+  
+  </style>
+</head>
+<body>
+  <div id="game"></div>
+  <input type="button" value="開始遊戲" id="start">
+  <p>分數：<span id="score">0</span></p>
+  <p>剩餘：<span id="timeleft">15</span>秒</p>
+  <script src="./jquery-3.4.1.min.js"></script>
+  <script>
+     $(function(){
+       //判斷是否在遊戲中
+       let isgame = false;
+
+       //點開始按鈕時
+       $("#start").on("click", function(){
+         //清空場上所有殭屍
+         $(".zb").remove();
+
+         //設定分數為0
+         let score = 0;
+
+         //設定剩餘時間為0
+         let gametime = 15;
+
+         //停用開始按鈕
+         $(this).attr("disabled", true);
+
+         //設定分數和時間文字  抓取這個#id的文字
+         $("#score").text(score);
+         $("#timeleft").text(gametime);
+
+         //遊戲計時器
+         let gametimer = setInterval(game, 1000);
+
+         //設定在遊戲中
+         isgame = true;
+
+         //每秒生一次殭屍
+         let zbtimer = setInterval(spawnZb, 500);
+
+         //設定殭屍id
+         let zbid = 0;
+
+         //每秒生一次殭屍
+         function spawnZb(){
+          // 隨機0到10的數字
+           let num = rand(10);
+          // 如果數字大於5，生殭屍   //zb是殭屍圖的class
+          if(num > 5){   
+            $("#game").append(`<img src="./img/1.gif>" class="zb" id="zb${zbid}">`);
+            $(`#zb${zbid}`).css("left", rand(70)+"%");
+            $(`#zb${zbid}`).css("top", rand(70)+"%");
+            movezb(zbid);
+            zbid++; 
+          }
+         }
+
+         //移動殭屍  我要讓它消失，點到的那個id
+         function movezb(id){
+           $(`#zb${id}`).animate({left: rand(70)+"%", top:rand(70)+"%"}, 3000, function(){
+             movezb(id);
+           });
+         }
+
+         //隨機0到num的數字
+         function rand(num){
+           return Math.floor( Math.random()*num );
+         }
+
+       })
+     })
+  
+  </script>
+
+</body>
+</html>
